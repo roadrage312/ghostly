@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Ghostly</string>
+    <string name="welcome_to">Welcome to</string>
+    <string name="ghost">Ghost</string>
+    <string name="enter_email_password">Enter your email and password</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="or">or</string>
+    <string name="enter_app_token">Enter the app token</string>
+    <string name="login">Login</string>
+    <string name="app_token">App token</string>
 </resources>
