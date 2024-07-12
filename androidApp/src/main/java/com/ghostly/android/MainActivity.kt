@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen() {
+fun MainScreen(screenName: String) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -47,7 +47,7 @@ fun MainScreen() {
         Text(
             modifier = Modifier
                 .align(Alignment.Center),
-            text = "Home",
+            text = screenName,
             style = MaterialTheme.typography.displayLarge
         )
     }
@@ -57,6 +57,6 @@ fun MainScreen() {
 @Composable
 fun DefaultPreview() {
     AppTheme {
-        MainScreen()
+        MainScreen("Preview")
     }
 }
