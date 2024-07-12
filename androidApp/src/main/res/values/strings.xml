@@ -12,4 +12,6 @@
     <string name="app_token">App token</string>
     <string name="no_posts">No posts match the current filter</string>
     <string name="show_all_posts">Show all posts</string>
+    <string name="cd_author">author</string>
+    <string name="cd_tag">Tag</string>
 </resources>
