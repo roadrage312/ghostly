@@ -27,12 +27,12 @@ fun EmptyPostView(postsViewModel: PostsViewModel) {
         Text(
             text = stringResource(R.string.no_posts),
             style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.Normal,
             maxLines = 2
         )
         Spacer(modifier = Modifier.height(24.dp))
         PrimaryButton(
-            onClick = { postsViewModel.onFilterChange("All") },
+            onClick = { postsViewModel.onFilterChange(Filter.All) },
             shape = MaterialTheme.shapes.medium,
         ) {
             Text(

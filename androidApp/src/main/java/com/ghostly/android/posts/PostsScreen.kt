@@ -1,4 +1,4 @@
-package com.ghostly.android.home
+package com.ghostly.android.posts
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,16 +18,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.ghostly.android.posts.EmptyPostView
-import com.ghostly.android.posts.PostItem
-import com.ghostly.android.posts.PostsViewModel
 import org.koin.androidx.compose.koinViewModel
-
-private val filters = listOf("All", "Drafts", "Published", "Scheduled")
 
 @Composable
 fun PostsScreen(
@@ -45,16 +41,16 @@ fun PostsScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp),
-            items = filters,
+            items = postsViewModel.filters,
             selectedFilter
         ) {
-            postsViewModel.onFilterChange(filters[it])
+            postsViewModel.onFilterChange(postsViewModel.filters[it])
         }
 
-        val filteredPosts = if (selectedFilter == "All")
+        val filteredPosts = if (selectedFilter == Filter.All)
             posts
         else
-            posts.filter { it.status == selectedFilter }
+            posts.filter { it.status == selectedFilter.key }
 
         if (filteredPosts.isEmpty()) {
             EmptyPostView(postsViewModel)
@@ -65,7 +61,7 @@ fun PostsScreen(
                 contentPadding = PaddingValues(vertical = 8.dp)
             ) {
                 items(filteredPosts) { post ->
-                    PostItem(mainNavController, post)
+                    PostItem(mainNavController, post, selectedFilter == Filter.All)
                 }
             }
         }
@@ -75,8 +71,8 @@ fun PostsScreen(
 @Composable
 fun FilterChipGroup(
     modifier: Modifier = Modifier,
-    items: List<String>,
-    selectedFilter: String,
+    items: List<Filter>,
+    selectedFilter: Filter,
     onSelectedChanged: (Int) -> Unit = {}
 ) {
     LazyRow(
@@ -100,11 +96,15 @@ fun FilterChipGroup(
                     containerColor = Color.Transparent,
                     selectedContainerColor = MaterialTheme.colorScheme.tertiary
                 ),
-                label = { Text(items[index]) },
+                label = {
+                    Text(
+                        text = items[index].filterName,
+                        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight(300))
+                    )
+                },
                 leadingIcon = {},
                 shape = MaterialTheme.shapes.medium
             )
-
         }
     }
 }
