@@ -30,7 +30,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.ghostly.android.R
-import com.ghostly.android.ui.components.PrimaryButton
+import com.ghostly.android.ui.components.AccentButton
 import org.koin.androidx.compose.koinViewModel
 import java.util.Locale
 
@@ -139,7 +139,7 @@ fun LoginScreen(
                 }),
             )
             Spacer(modifier = Modifier.height(24.dp))
-            PrimaryButton(
+            AccentButton(
                 onClick = { loginViewModel.tryLogin() },
                 modifier = Modifier
                     .fillMaxWidth(),
