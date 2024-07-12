@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material.icons.extended)
+    implementation(libs.coil.compose)
 
     debugImplementation(libs.compose.ui.tooling)
 }

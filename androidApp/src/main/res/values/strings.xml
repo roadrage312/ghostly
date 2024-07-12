@@ -10,4 +10,6 @@
     <string name="enter_app_token">Enter the app token</string>
     <string name="login">Login</string>
     <string name="app_token">App token</string>
+    <string name="no_posts">No posts match the current filter</string>
+    <string name="show_all_posts">Show all posts</string>
 </resources>
