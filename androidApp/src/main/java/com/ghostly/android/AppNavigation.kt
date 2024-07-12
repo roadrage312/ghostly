@@ -7,10 +7,8 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import com.ghostly.android.home.HomeScreen
 import com.ghostly.android.login.LoginScreen
 import com.ghostly.android.login.LoginViewModel

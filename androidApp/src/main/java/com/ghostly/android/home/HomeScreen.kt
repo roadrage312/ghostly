@@ -20,7 +20,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.ghostly.android.MainScreen
 import com.ghostly.android.Screen
 
 @Composable
@@ -100,9 +99,9 @@ fun HomeScreen(mainNavController: NavHostController) {
             startDestination = Screen.Posts.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(Screen.Posts.route) { MainScreen(Screen.Posts.route) }
-            composable(Screen.Pages.route) { MainScreen(Screen.Pages.route) }
-            composable(Screen.Settings.route) { MainScreen(Screen.Settings.route) }
+            composable(Screen.Posts.route) { PostsScreen(mainNavController) }
+            composable(Screen.Pages.route) { PagesScreen() }
+            composable(Screen.Settings.route) { SettingsScreen() }
         }
     }
 
