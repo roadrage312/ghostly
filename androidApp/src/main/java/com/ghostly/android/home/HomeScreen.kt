@@ -22,9 +22,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ghostly.android.Screen
 import com.ghostly.android.posts.PostsScreen
+import com.ghostly.android.posts.models.Post
 
 @Composable
-fun HomeScreen(mainNavController: NavHostController) {
+fun HomeScreen(onPostClick: (Post) -> Unit) {
     val context = LocalContext.current
     val navController = rememberNavController()
     var selectedTab by remember { mutableStateOf<Screen>(Screen.Posts) }
@@ -100,7 +101,7 @@ fun HomeScreen(mainNavController: NavHostController) {
             startDestination = Screen.Posts.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(Screen.Posts.route) { PostsScreen(mainNavController) }
+            composable(Screen.Posts.route) { PostsScreen(onPostClick = onPostClick) }
             composable(Screen.Pages.route) { PagesScreen() }
             composable(Screen.Settings.route) { SettingsScreen() }
         }

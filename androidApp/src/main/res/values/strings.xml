@@ -14,4 +14,6 @@
     <string name="show_all_posts">Show all posts</string>
     <string name="cd_author">author</string>
     <string name="cd_tag">Tag</string>
+    <string name="posts">Posts</string>
+    <string name="cd_back">Back</string>
 </resources>

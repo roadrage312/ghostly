@@ -1,6 +1,7 @@
 package com.ghostly.android.posts
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,26 +32,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ghostly.android.R
+import com.ghostly.android.posts.models.Post
 import com.ghostly.android.theme.accentRed
 import com.ghostly.android.ui.components.verticalGradient
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
+import com.ghostly.android.utils.getTimeAgo
 
 @Composable
-fun PostItem(navController: NavHostController, post: Post, showStatus: Boolean) {
-    val encodedAuthorName = encodeForNavigation(post.author.name)
-    val encodedAuthorAvatarUrl = encodeForNavigation(post.author.avatarUrl)
-    val encodedTime = encodeForNavigation(post.time)
-    val encodedTitle = encodeForNavigation(post.title)
-    val encodedContent = encodeForNavigation(post.content)
-    val encodedPrimaryTag = encodeForNavigation(post.primaryTag)
-    val encodedImageUrl = encodeForNavigation(post.imageUrl)
-
-    val filter = remember(post.status) { statusKeyToFilter(post.status) }
+fun PostItem(post: Post, showStatus: Boolean, onPostClick: (Post) -> Unit) {
+    val filter = remember(post.status) { Filter.statusKeyToFilter(post.status) }
 
     Column(
         modifier = Modifier
@@ -64,7 +56,7 @@ fun PostItem(navController: NavHostController, post: Post, showStatus: Boolean) 
                 .height(250.dp),
             shape = MaterialTheme.shapes.large,
             onClick = {
-                //TODO Open detail screen
+                onPostClick.invoke(post)
             }
         ) {
             Box(
@@ -81,36 +73,9 @@ fun PostItem(navController: NavHostController, post: Post, showStatus: Boolean) 
                         .fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
-                AssistChip(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(8.dp)
-                        .height(30.dp),
-                    onClick = { /*TODO*/ },
-                    label = {
-                        Text(
-                            text = post.primaryTag,
-                            style = MaterialTheme.typography.labelMedium
-                        )
-                    },
-                    shape = MaterialTheme.shapes.medium.copy(CornerSize(6.dp)),
-                    colors = AssistChipDefaults.assistChipColors(
-                        labelColor = MaterialTheme.colorScheme.scrim,
-                        containerColor = Color.White.copy(alpha = 0.6f),
-                    ),
-                    border = AssistChipDefaults.assistChipBorder(
-                        enabled = true,
-                        borderColor = Color.Transparent
-                    ),
-                    leadingIcon = {
-                        Icon(
-                            modifier = Modifier.size(16.dp),
-                            imageVector = Icons.Filled.Sell,
-                            contentDescription = stringResource(R.string.cd_tag),
-                            tint = MaterialTheme.colorScheme.scrim
-                        )
-                    },
-                )
+                if (post.tags.isEmpty().not()) {
+                    PrimaryTag(tagName = post.tags[0].name)
+                }
                 Box(
                     modifier = Modifier
                         .align(Alignment.BottomStart)
@@ -165,7 +130,10 @@ fun PostItem(navController: NavHostController, post: Post, showStatus: Boolean) 
                 .padding(end = 2.dp),
         ) {
             AsyncImage(
-                model = post.author.avatarUrl,
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(post.authors[0].avatarUrl)
+                    .crossfade(true)
+                    .build(),
                 modifier = Modifier
                     .aspectRatio(1f)
                     .clip(CircleShape),
@@ -177,13 +145,13 @@ fun PostItem(navController: NavHostController, post: Post, showStatus: Boolean) 
                     .padding(start = 4.dp)
                     .weight(1f)
                     .align(Alignment.CenterVertically),
-                text = post.author.name,
+                text = post.authors[0].name,
                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight(600)),
                 maxLines = 1
             )
             Text(
                 modifier = Modifier.align(Alignment.CenterVertically),
-                text = post.time,
+                text = getTimeAgo(post.time),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1
@@ -192,15 +160,37 @@ fun PostItem(navController: NavHostController, post: Post, showStatus: Boolean) 
     }
 }
 
-private fun statusKeyToFilter(status: String): Filter {
-    return when (status) {
-        Filter.Drafts.key -> Filter.Drafts
-        Filter.Published.key -> Filter.Published
-        Filter.Scheduled.key -> Filter.Scheduled
-        else -> Filter.All
-    }
-}
-
-private fun encodeForNavigation(input: String): String {
-    return URLEncoder.encode(input, StandardCharsets.UTF_8.toString())
+@Composable
+private fun BoxScope.PrimaryTag(tagName: String) {
+    AssistChip(
+        modifier = Modifier
+            .align(Alignment.TopEnd)
+            .padding(8.dp)
+            .height(30.dp),
+        onClick = { /*TODO*/ },
+        label = {
+            Text(
+                text = tagName,
+                style = MaterialTheme.typography.labelMedium,
+                maxLines = 1
+            )
+        },
+        shape = MaterialTheme.shapes.medium.copy(CornerSize(6.dp)),
+        colors = AssistChipDefaults.assistChipColors(
+            labelColor = MaterialTheme.colorScheme.scrim,
+            containerColor = Color.White.copy(alpha = 0.6f),
+        ),
+        border = AssistChipDefaults.assistChipBorder(
+            enabled = true,
+            borderColor = Color.Transparent
+        ),
+        leadingIcon = {
+            Icon(
+                modifier = Modifier.size(16.dp),
+                imageVector = Icons.Filled.Sell,
+                contentDescription = stringResource(R.string.cd_tag),
+                tint = MaterialTheme.colorScheme.scrim
+            )
+        },
+    )
 }

@@ -9,9 +9,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.ghostly.android.home.HomeScreen
 import com.ghostly.android.login.LoginScreen
 import com.ghostly.android.login.LoginViewModel
+import com.ghostly.android.posts.PostDetailScreen
+import com.ghostly.android.posts.models.Post
+import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
 sealed class Screen(val route: String, val icon: ImageVector, val title: String) {
@@ -20,26 +24,45 @@ sealed class Screen(val route: String, val icon: ImageVector, val title: String)
     data object Settings : Screen("settings", Icons.Default.Settings, "Settings")
 }
 
+sealed class Destination {
+    @Serializable
+    data object Home
+
+    @Serializable
+    data object Login
+}
+
 @Composable
 fun AppNavigation(
     navController: NavHostController,
     loginViewModel: LoginViewModel = koinViewModel()
 ) {
-    NavHost(navController = navController, startDestination = "main") {
-        composable("login") {
+    NavHost(navController = navController, startDestination = Destination.Home) {
+        composable<Destination.Login> {
             LoginScreen(
                 loginViewModel = loginViewModel,
                 onLoginSuccess = {
-                    navController.navigate("main") {
-                        popUpTo("login") {
+                    navController.navigate(Destination.Home) {
+                        popUpTo(Destination.Login) {
                             inclusive = true
                         }
                     }
                 }
             )
         }
-        composable("main") {
-            HomeScreen(navController)
+        composable<Post>(
+            typeMap = Post.typeMap
+        ) { backStackEntry ->
+            val post = backStackEntry.toRoute<Post>()
+            PostDetailScreen(
+                navController = navController,
+                post = post,
+            )
+        }
+        composable<Destination.Home> {
+            HomeScreen {
+                navController.navigate(it)
+            }
         }
     }
 }
