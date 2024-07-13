@@ -1,6 +1,6 @@
 [versions]
 agp = "8.2.2"
-coilCompose = "2.2.2"
+coilCompose = "2.6.0"
 coreSplashscreen = "1.0.1"
 koinAndroidxCompose = "3.4.0"
 kotlin = "1.9.20"
@@ -8,10 +8,12 @@ compose = "1.6.8"
 compose-compiler = "1.5.4"
 compose-material3 = "1.2.1"
 androidx-activityCompose = "1.9.0"
+kotlinxSerializationJson = "1.6.3"
 lifecycleViewmodelCompose = "2.8.3"
 material = "1.12.0"
 materialIconsExtended = "1.6.8"
-navigationCompose = "2.7.7"
+navigationCompose = "2.8.0-beta05"
+richeditorCompose = "1.0.0-rc05"
 
 [libraries]
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
@@ -26,7 +28,9 @@ compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
 compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
+richeditor-compose = { module = "com.mohamedrejeb.richeditor:richeditor-compose", version.ref = "richeditorCompose" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -34,3 +38,4 @@ androidLibrary = { id = "com.android.library", version.ref = "agp" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
+kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

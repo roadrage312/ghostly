@@ -14,24 +14,35 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import com.ghostly.android.posts.models.Post
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PostsScreen(
-    mainNavController: NavHostController,
-    postsViewModel: PostsViewModel = koinViewModel()
+    postsViewModel: PostsViewModel = koinViewModel(),
+    onPostClick: (Post) -> Unit
 ) {
+    val context = LocalContext.current
     val posts by postsViewModel.posts.collectAsState()
     val selectedFilter by postsViewModel.selectedFilter.collectAsState()
+
+    //Todo Needs to change with API integration
+    LaunchedEffect(Unit) {
+        launch(Dispatchers.IO) {
+            postsViewModel.getPosts(context)
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -61,7 +72,7 @@ fun PostsScreen(
                 contentPadding = PaddingValues(vertical = 8.dp)
             ) {
                 items(filteredPosts) { post ->
-                    PostItem(mainNavController, post, selectedFilter == Filter.All)
+                    PostItem(post, selectedFilter == Filter.All, onPostClick)
                 }
             }
         }
@@ -112,5 +123,5 @@ fun FilterChipGroup(
 @Preview
 @Composable
 fun PostsScreenPreview() {
-    PostsScreen(rememberNavController())
+    PostsScreen {}
 }
