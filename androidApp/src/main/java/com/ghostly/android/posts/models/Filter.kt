@@ -1,4 +1,4 @@
-package com.ghostly.android.posts
+package com.ghostly.android.posts.models
 
 sealed class Filter(val key: String, val filterName: String, val title: String) {
     data object All : Filter("all", "All", "All")

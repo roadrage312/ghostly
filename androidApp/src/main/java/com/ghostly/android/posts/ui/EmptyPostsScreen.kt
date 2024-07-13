@@ -1,4 +1,4 @@
-package com.ghostly.android.posts
+package com.ghostly.android.posts.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,6 +15,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ghostly.android.R
+import com.ghostly.android.posts.models.Filter
+import com.ghostly.android.posts.PostsViewModel
 import com.ghostly.android.ui.components.PrimaryButton
 
 @Composable

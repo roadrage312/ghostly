@@ -3,6 +3,7 @@ package com.ghostly.android.posts
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.ghostly.android.data.parsePostsJson
+import com.ghostly.android.posts.models.Filter
 import com.ghostly.android.posts.models.Post
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

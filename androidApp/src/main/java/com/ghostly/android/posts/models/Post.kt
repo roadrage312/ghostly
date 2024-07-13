@@ -1,6 +1,5 @@
 package com.ghostly.android.posts.models
 
-import com.ghostly.android.posts.serializableType
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.reflect.typeOf

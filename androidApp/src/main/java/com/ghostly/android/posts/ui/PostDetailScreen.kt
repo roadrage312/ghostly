@@ -1,4 +1,4 @@
-package com.ghostly.android.posts
+package com.ghostly.android.posts.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,6 +43,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ghostly.android.R
+import com.ghostly.android.posts.models.Filter
 import com.ghostly.android.posts.models.Post
 import com.ghostly.android.posts.models.Tag
 import com.ghostly.android.theme.tagColors

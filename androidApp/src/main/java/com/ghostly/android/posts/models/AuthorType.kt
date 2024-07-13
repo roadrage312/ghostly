@@ -1,7 +1,8 @@
-package com.ghostly.android.posts
+package com.ghostly.android.posts.models
 
 import android.os.Bundle
 import androidx.navigation.NavType
+import com.ghostly.android.posts.ui.decodeFromNavigation
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.net.URLEncoder

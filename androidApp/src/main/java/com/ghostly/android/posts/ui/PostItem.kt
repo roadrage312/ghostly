@@ -1,4 +1,4 @@
-package com.ghostly.android.posts
+package com.ghostly.android.posts.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ghostly.android.R
+import com.ghostly.android.posts.models.Filter
 import com.ghostly.android.posts.models.Post
 import com.ghostly.android.theme.accentRed
 import com.ghostly.android.ui.components.verticalGradient

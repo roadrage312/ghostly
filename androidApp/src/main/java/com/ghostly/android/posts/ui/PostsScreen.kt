@@ -1,4 +1,4 @@
-package com.ghostly.android.posts
+package com.ghostly.android.posts.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,6 +23,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ghostly.android.posts.models.Filter
+import com.ghostly.android.posts.PostsViewModel
 import com.ghostly.android.posts.models.Post
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

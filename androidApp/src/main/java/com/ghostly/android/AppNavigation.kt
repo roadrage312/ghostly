@@ -13,7 +13,7 @@ import androidx.navigation.toRoute
 import com.ghostly.android.home.HomeScreen
 import com.ghostly.android.login.LoginScreen
 import com.ghostly.android.login.LoginViewModel
-import com.ghostly.android.posts.PostDetailScreen
+import com.ghostly.android.posts.ui.PostDetailScreen
 import com.ghostly.android.posts.models.Post
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
