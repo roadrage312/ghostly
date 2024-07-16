@@ -7,13 +7,21 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="or">or</string>
-    <string name="enter_app_token">Enter the app token</string>
+    <string name="domain_api_key">Enter your domain url</string>
     <string name="login">Login</string>
-    <string name="app_token">App token</string>
+    <string name="admin_key">API Key</string>
     <string name="no_posts">No posts match the current filter</string>
     <string name="show_all_posts">Show all posts</string>
     <string name="cd_author">author</string>
     <string name="cd_tag">Tag</string>
     <string name="posts">Posts</string>
     <string name="cd_back">Back</string>
+    <string name="ghost_domain">Ghost Domain</string>
+    <string name="cd_domain_placeholder">%1$s&#160;https://&lt;your_domain&gt;/ghost</string>
+    <string name="get_details">Get Details</string>
+    <string name="getting_your_site_details">Getting your site details</string>
+    <string name="invalid_site_details">Invalid Site Details</string>
+    <string name="enter_admin_api_key">Enter your admin api key</string>
+    <string name="not_you">Not you?</string>
+    <string name="checking_credentials">Checking credentials</string>
 </resources>

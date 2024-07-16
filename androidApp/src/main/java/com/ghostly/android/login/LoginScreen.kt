@@ -42,6 +42,7 @@ fun LoginScreen(
     val email by loginViewModel.email.collectAsState()
     val password by loginViewModel.password.collectAsState()
     val token by loginViewModel.token.collectAsState()
+    val domain by loginViewModel.domain.collectAsState()
     val inputValidated by loginViewModel.inputValidated.collectAsState()
     val isLoggedIn by loginViewModel.isLoggedIn.collectAsState()
 
@@ -122,14 +123,24 @@ fun LoginScreen(
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = stringResource(R.string.enter_app_token),
+                text = stringResource(R.string.domain_api_key),
                 style = MaterialTheme.typography.bodyMedium
             )
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
+                value = domain,
+                onValueChange = loginViewModel::onDomainChange,
+                label = { Text(stringResource(R.string.ghost_domain)) },
+                placeholder = { Text(text = stringResource(R.string.cd_domain_placeholder)) },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            OutlinedTextField(
                 value = token,
                 onValueChange = loginViewModel::onTokenChange,
-                label = { Text(stringResource(R.string.app_token)) },
+                label = { Text(stringResource(R.string.admin_key)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 visualTransformation = PasswordVisualTransformation(),

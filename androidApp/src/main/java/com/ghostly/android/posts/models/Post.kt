@@ -13,7 +13,7 @@ data class Post(
     @SerialName("html")
     val content: String,
     @SerialName("feature_image")
-    val imageUrl: String?,
+    val imageUrl: String = "https://placehold.co/600x400/webp?text=Image%20Missing",
     val tags: List<Tag>,
     val status: String, // "draft", "scheduled", "published"
 ) {

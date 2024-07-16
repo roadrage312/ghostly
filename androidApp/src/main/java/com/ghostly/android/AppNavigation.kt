@@ -11,10 +11,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.ghostly.android.home.HomeScreen
-import com.ghostly.android.login.LoginScreen
+import com.ghostly.android.login.LoginScreenWithAPIKey
 import com.ghostly.android.login.LoginViewModel
-import com.ghostly.android.posts.ui.PostDetailScreen
 import com.ghostly.android.posts.models.Post
+import com.ghostly.android.posts.ui.PostDetailScreen
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
@@ -35,11 +35,11 @@ sealed class Destination {
 @Composable
 fun AppNavigation(
     navController: NavHostController,
-    loginViewModel: LoginViewModel = koinViewModel()
+    loginViewModel: LoginViewModel = koinViewModel(),
 ) {
-    NavHost(navController = navController, startDestination = Destination.Home) {
+    NavHost(navController = navController, startDestination = Destination.Login) {
         composable<Destination.Login> {
-            LoginScreen(
+            LoginScreenWithAPIKey(
                 loginViewModel = loginViewModel,
                 onLoginSuccess = {
                     navController.navigate(Destination.Home) {

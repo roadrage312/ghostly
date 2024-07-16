@@ -1,4 +1,4 @@
-package com.ghostly.android.data
+package com.ghostly.android.network
 
 import android.content.Context
 import com.ghostly.android.posts.models.PostsResponse
