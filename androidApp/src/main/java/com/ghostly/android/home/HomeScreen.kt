@@ -19,12 +19,15 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.ghostly.android.Screen
-import com.ghostly.android.posts.ui.PostsScreen
 import com.ghostly.android.posts.models.Post
+import com.ghostly.android.posts.ui.PostsScreen
+import com.ghostly.android.settings.SettingsScreen
 
 @Composable
-fun HomeScreen(onPostClick: (Post) -> Unit) {
+fun HomeScreen(
+    onPostClick: (Post) -> Unit,
+    onLogout: () -> Unit,
+) {
     val context = LocalContext.current
     val navController = rememberNavController()
     var selectedTab by remember { mutableStateOf<Screen>(Screen.Posts) }
@@ -44,26 +47,6 @@ fun HomeScreen(onPostClick: (Post) -> Unit) {
                     onClick = {
                         selectedTab = Screen.Posts
                         navController.navigate(Screen.Posts.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    }
-                )
-                NavigationBarItem(
-                    icon = {
-                        Icon(
-                            imageVector = Screen.Pages.icon,
-                            contentDescription = Screen.Pages.title
-                        )
-                    },
-                    label = { Text(Screen.Pages.title) },
-                    selected = selectedTab == Screen.Pages,
-                    onClick = {
-                        selectedTab = Screen.Pages
-                        navController.navigate(Screen.Pages.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
                             }
@@ -101,8 +84,7 @@ fun HomeScreen(onPostClick: (Post) -> Unit) {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.Posts.route) { PostsScreen(onPostClick = onPostClick) }
-            composable(Screen.Pages.route) { PagesScreen() }
-            composable(Screen.Settings.route) { SettingsScreen() }
+            composable(Screen.Settings.route) { SettingsScreen(onLogout = onLogout) }
         }
     }
 

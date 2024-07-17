@@ -2,6 +2,8 @@ package com.ghostly.android.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ghostly.android.datastore.DataStoreConstants
+import com.ghostly.android.datastore.DataStoreRepository
 import com.ghostly.android.login.data.GetSiteDetailsUseCase
 import com.ghostly.android.login.models.LoginDetails
 import com.ghostly.android.login.models.LoginDetailsStore
@@ -11,15 +13,16 @@ import com.ghostly.android.network.models.Result
 import com.ghostly.android.posts.data.GetPostsUseCase
 import com.ghostly.android.utils.isValidEmail
 import com.ghostly.android.utils.isValidGhostDomain
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val loginDetailsStore: LoginDetailsStore,
     private val getSiteDetailsUseCase: GetSiteDetailsUseCase,
     private val getPostsUseCase: GetPostsUseCase,
+    private val dataStoreRepository: DataStoreRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<LoginState>(LoginState.CheckLogin)
@@ -51,13 +54,7 @@ class LoginViewModel(
 
     init {
         viewModelScope.launch {
-            val log = loginDetailsStore.get()?.isLoggedIn
-            println("Goku: login: $log")
             _isLoggedIn.value = loginDetailsStore.get()?.isLoggedIn == true
-            delay(1000)
-            val log1 = loginDetailsStore.get()?.isLoggedIn
-            println("Goku: login: $log1")
-
             if (_isLoggedIn.value.not()) {
                 _uiState.emit(LoginState.Start)
             }
@@ -68,6 +65,14 @@ class LoginViewModel(
         _inputValidated.value =
             (isValidEmail(_email.value) && _password.value.isEmpty().not())
                     || (_token.value.isEmpty().not() && isValidGhostDomain(_domain.value))
+    }
+
+    fun checkIfLoggedOut(logout: Boolean) = flow {
+        if (logout.not()) {
+            reset()
+        }
+
+        emit(logout)
     }
 
     fun onEmailChange(newEmail: String) {
@@ -101,9 +106,6 @@ class LoginViewModel(
                 )
             )
 
-            val log = loginDetailsStore.get()?.isLoggedIn
-            println("Goku: login store: $log")
-
             when (val result = getPostsUseCase.getOnePost()) {
                 is Result.Success -> {
                     _isLoggedIn.value = true
@@ -123,6 +125,19 @@ class LoginViewModel(
     suspend fun getSiteDetails() {
         when (val result = getSiteDetailsUseCase.invoke(domain.value)) {
             is Result.Success -> {
+                result.data?.siteDetails?.title?.let {
+                    dataStoreRepository.putString(
+                        DataStoreConstants.STORE_NAME,
+                        it
+                    )
+                }
+                result.data?.siteDetails?.icon?.let {
+                    dataStoreRepository.putString(
+                        DataStoreConstants.STORE_ICON,
+                        it
+                    )
+                }
+
                 _siteDetails.value = result.data?.siteDetails
                 _uiState.value = LoginState.ValidDomain
             }

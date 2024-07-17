@@ -1,4 +1,4 @@
-package com.ghostly.android.login
+package com.ghostly.android.login.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,22 +40,27 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ghostly.android.R
+import com.ghostly.android.login.LoginViewModel
 import com.ghostly.android.login.models.LoginState
 import com.ghostly.android.theme.accentRed
 import com.ghostly.android.ui.components.AccentButton
+import com.ghostly.android.ui.components.toast
 import com.ghostly.android.utils.capitalize
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import java.util.Locale
 
 @Composable
-fun LoginScreenWithAPIKey(
+fun LoginScreen(
     loginViewModel: LoginViewModel = koinViewModel(),
-    onLoginSuccess: () -> Unit
+    onLoginSuccess: () -> Unit,
+    didUserLogout: Boolean = false,
 ) {
 
+    val context = LocalContext.current
     val uiState by loginViewModel.uiState.collectAsState()
     val isLoggedIn by loginViewModel.isLoggedIn.collectAsState()
+    val isLoggedOut by loginViewModel.checkIfLoggedOut(didUserLogout).collectAsState(didUserLogout)
 
     LaunchedEffect(isLoggedIn) {
         if (isLoggedIn) {
@@ -63,27 +68,29 @@ fun LoginScreenWithAPIKey(
         }
     }
 
+    LaunchedEffect(Unit) {
+        if (isLoggedOut) {
+            context.toast(R.string.successfully_logged_out)
+        }
+    }
+
     Surface(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
                 .padding(32.dp)
-                .padding(top = 50.dp),
-            verticalArrangement = Arrangement.Top
+                .padding(top = 50.dp), verticalArrangement = Arrangement.Top
         ) {
             Text(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally),
+                modifier = Modifier.align(Alignment.CenterHorizontally),
                 text = stringResource(R.string.welcome_to),
                 style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.primary)
             )
             Text(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally),
+                modifier = Modifier.align(Alignment.CenterHorizontally),
                 text = stringResource(R.string.ghost),
                 style = MaterialTheme.typography.displayLarge
             )
@@ -93,14 +100,12 @@ fun LoginScreenWithAPIKey(
                 is LoginState.CheckLogin -> CheckLogin()
                 is LoginState.Start -> LoginStart(loginViewModel)
                 is LoginState.InvalidDomain -> LoginStart(
-                    loginViewModel,
-                    (uiState as LoginState.InvalidDomain)
+                    loginViewModel, (uiState as LoginState.InvalidDomain)
                 )
 
                 is LoginState.ValidDomain -> DomainDetailsAvailable(loginViewModel)
                 is LoginState.InvalidApiKey -> DomainDetailsAvailable(
-                    loginViewModel,
-                    (uiState as LoginState.InvalidApiKey)
+                    loginViewModel, (uiState as LoginState.InvalidApiKey)
                 )
             }
         }
@@ -134,8 +139,7 @@ fun ColumnScope.LoginStart(
         Text(
             text = stringResource(R.string.getting_your_site_details),
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
+            modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         Spacer(modifier = Modifier.height(16.dp))
         CircularProgressIndicator(
@@ -145,6 +149,12 @@ fun ColumnScope.LoginStart(
             color = MaterialTheme.colorScheme.tertiary
         )
     } else {
+        Text(
+            text = stringResource(R.string.get_setup),
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = domain,
             onValueChange = loginViewModel::onDomainChange,
@@ -157,8 +167,7 @@ fun ColumnScope.LoginStart(
         Text(
             text = stringResource(R.string.cd_domain_placeholder, "Ex:"),
             style = MaterialTheme.typography.labelMedium,
-            modifier = Modifier
-                .align(Alignment.Start)
+            modifier = Modifier.align(Alignment.Start)
         )
         if (uiState != null) {
             Spacer(modifier = Modifier.height(8.dp))
@@ -166,8 +175,7 @@ fun ColumnScope.LoginStart(
                 text = uiState.message,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.error,
-                modifier = Modifier
-                    .align(Alignment.Start)
+                modifier = Modifier.align(Alignment.Start)
             )
         }
         Spacer(modifier = Modifier.height(24.dp))
@@ -179,10 +187,7 @@ fun ColumnScope.LoginStart(
                     loginViewModel.getSiteDetails()
                     showProgress.value = false
                 }
-            },
-            modifier = Modifier
-                .fillMaxWidth(),
-            enabled = validDomain
+            }, modifier = Modifier.fillMaxWidth(), enabled = validDomain
         ) {
             Text(
                 text = stringResource(R.string.get_details),
@@ -201,13 +206,10 @@ fun ColumnScope.DomainDetailsAvailable(
     val siteDetails by loginViewModel.siteDetails.collectAsState()
     val token by loginViewModel.token.collectAsState()
     val inputValidated by loginViewModel.inputValidated.collectAsState()
-    val context = LocalContext.current
 
     siteDetails?.let { site ->
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(site.icon)
-                .crossfade(true)
+            model = ImageRequest.Builder(LocalContext.current).data(site.icon).crossfade(true)
                 .build(),
             contentDescription = null,
             modifier = Modifier
@@ -238,8 +240,7 @@ fun ColumnScope.DomainDetailsAvailable(
         Text(
             text = stringResource(R.string.checking_credentials),
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
+            modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         Spacer(modifier = Modifier.height(16.dp))
         CircularProgressIndicator(
@@ -273,8 +274,7 @@ fun ColumnScope.DomainDetailsAvailable(
                 text = uiState.message,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.error,
-                modifier = Modifier
-                    .align(Alignment.Start)
+                modifier = Modifier.align(Alignment.Start)
             )
         }
         Spacer(modifier = Modifier.height(24.dp))
@@ -282,10 +282,7 @@ fun ColumnScope.DomainDetailsAvailable(
             onClick = {
                 showProgress.value = true
                 loginViewModel.tryLogin()
-            },
-            modifier = Modifier
-                .fillMaxWidth(),
-            enabled = inputValidated
+            }, modifier = Modifier.fillMaxWidth(), enabled = inputValidated
         ) {
             Text(
                 text = stringResource(R.string.login).uppercase(Locale.getDefault()),

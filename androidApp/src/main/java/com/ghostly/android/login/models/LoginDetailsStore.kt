@@ -2,12 +2,15 @@ package com.ghostly.android.login.models
 
 import android.content.Context
 import androidx.datastore.dataStore
-import com.ghostly.android.datastore.CryptedDataStore
 import com.ghostly.android.datastore.DataStoreConstants
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 
 interface LoginDetailsStore {
+
+    val loginDetails: Flow<LoginDetails?>
+
     suspend fun get(): LoginDetails?
 
     suspend fun put(loginDetails: LoginDetails)
@@ -16,14 +19,15 @@ interface LoginDetailsStore {
 }
 
 class LoginDetailsStoreImpl(
-    cryptedDataStore: CryptedDataStore,
     private val context: Context,
 ) : LoginDetailsStore {
 
     private val Context.datastore by dataStore(
-        fileName = DataStoreConstants.FILE_NAME,
-        serializer = LoginDetailsSerializer(cryptedDataStore)
+        fileName = DataStoreConstants.LOGIN_FILE_NAME,
+        serializer = LoginDetailsSerializer()
     )
+    override val loginDetails: Flow<LoginDetails?>
+        get() = context.datastore.data
 
     override suspend fun get(): LoginDetails? = runBlocking {
         context.datastore.data.firstOrNull()

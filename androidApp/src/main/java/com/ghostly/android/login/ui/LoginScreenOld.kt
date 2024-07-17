@@ -1,4 +1,4 @@
-package com.ghostly.android.login
+package com.ghostly.android.login.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -30,12 +30,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.ghostly.android.R
+import com.ghostly.android.login.LoginViewModel
 import com.ghostly.android.ui.components.AccentButton
 import org.koin.androidx.compose.koinViewModel
 import java.util.Locale
 
 @Composable
-fun LoginScreen(
+fun LoginScreenOld(
     loginViewModel: LoginViewModel = koinViewModel(),
     onLoginSuccess: () -> Unit
 ) {
