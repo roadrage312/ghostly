@@ -41,7 +41,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ghostly.android.R
 import com.ghostly.android.login.LoginViewModel
-import com.ghostly.android.login.models.LoginState
+import com.ghostly.login.models.LoginState
 import com.ghostly.android.theme.accentRed
 import com.ghostly.android.ui.components.AccentButton
 import com.ghostly.android.ui.components.toast

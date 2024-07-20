@@ -2,25 +2,25 @@ package com.ghostly.android.posts
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import androidx.paging.filter
-import com.ghostly.android.posts.data.GetPostsUseCase
-import com.ghostly.android.posts.models.Filter
-import com.ghostly.android.posts.models.Post
+import app.cash.paging.PagingData
+import app.cash.paging.cachedIn
+import app.cash.paging.filter
+import com.ghostly.posts.data.GetPostsUseCase
+import com.ghostly.posts.models.Filter
+import com.ghostly.posts.models.Post
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 
 class PostsViewModel(
-    getPostsUseCase: GetPostsUseCase
+    getPostsUseCase: GetPostsUseCase,
 ) : ViewModel() {
 
     private val _selectedFilter = MutableStateFlow<Filter>(Filter.All)
     val selectedFilter: StateFlow<Filter> = _selectedFilter
 
-    private val allPosts: Flow<PagingData<Post>> = getPostsUseCase(20)
+    private val allPosts: Flow<PagingData<Post>> = getPostsUseCase.invoke(30)
         .cachedIn(viewModelScope)
 
     val filteredPosts: Flow<PagingData<Post>> = allPosts

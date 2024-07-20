@@ -2,9 +2,9 @@ package com.ghostly.android.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ghostly.android.datastore.DataStoreConstants
-import com.ghostly.android.datastore.DataStoreRepository
-import com.ghostly.android.login.models.LoginDetailsStore
+import com.ghostly.datastore.DataStoreConstants
+import com.ghostly.datastore.DataStoreRepository
+import com.ghostly.datastore.LoginDetailsStore
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

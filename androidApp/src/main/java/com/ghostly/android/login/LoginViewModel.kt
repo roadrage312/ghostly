@@ -2,17 +2,17 @@ package com.ghostly.android.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ghostly.android.datastore.DataStoreConstants
-import com.ghostly.android.datastore.DataStoreRepository
-import com.ghostly.android.login.data.GetSiteDetailsUseCase
-import com.ghostly.android.login.models.LoginDetails
-import com.ghostly.android.login.models.LoginDetailsStore
-import com.ghostly.android.login.models.LoginState
-import com.ghostly.android.login.models.SiteDetails
-import com.ghostly.android.network.models.Result
-import com.ghostly.android.posts.data.GetPostsUseCase
 import com.ghostly.android.utils.isValidEmail
 import com.ghostly.android.utils.isValidGhostDomain
+import com.ghostly.datastore.DataStoreConstants
+import com.ghostly.datastore.DataStoreRepository
+import com.ghostly.datastore.LoginDetailsStore
+import com.ghostly.login.data.GetSiteDetailsUseCase
+import com.ghostly.login.models.LoginDetails
+import com.ghostly.login.models.LoginState
+import com.ghostly.login.models.SiteDetails
+import com.ghostly.network.models.Result
+import com.ghostly.posts.data.GetPostsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow

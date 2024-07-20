@@ -35,4 +35,12 @@
     <string name="get_setup">Let\'s get you setup</string>
     <string name="successfully_logged_out">Successfully Logged out</string>
     <string name="app_version">App Version: %1$s</string>
+    <string name="publish">Publish</string>
+    <string name="unpublish">Unpublish</string>
+    <string name="published_successfully">Published Successfully</string>
+    <string name="publishing_failed">Publishing Failed</string>
+    <string name="publishing_failed_unauthorized">Publishing Failed. Unauthorized</string>
+    <string name="unpublished_successfully">Unpublished Successfully</string>
+    <string name="unpublishing_failed">Unpublishing Failed</string>
+    <string name="unpublishing_failed_unauthorized">Unpublishing Failed. Unauthorized</string>
 </resources>

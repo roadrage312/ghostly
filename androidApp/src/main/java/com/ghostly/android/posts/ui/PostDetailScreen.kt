@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -24,12 +25,16 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,20 +48,40 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ghostly.android.R
-import com.ghostly.android.posts.models.Filter
-import com.ghostly.android.posts.models.Post
-import com.ghostly.android.posts.models.Tag
+import com.ghostly.android.posts.PostDetailViewModel
+import com.ghostly.android.posts.PostsConstants
+import com.ghostly.android.posts.getTimeFromStatus
 import com.ghostly.android.theme.tagColors
-import com.ghostly.android.utils.getTimeAgo
+import com.ghostly.android.ui.components.Toast
+import com.ghostly.posts.models.Filter
+import com.ghostly.posts.models.Post
+import com.ghostly.posts.models.Tag
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
+import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PostDetailScreen(navController: NavController, post: Post) {
-    val filter = remember(post.status) { Filter.statusKeyToFilter(post.status) }
+fun PostDetailScreen(
+    navController: NavController,
+    post: Post,
+    viewModel: PostDetailViewModel = koinViewModel(),
+) {
+    val updatedPost by viewModel.observePost(post).collectAsState()
+
+    val scope = rememberCoroutineScope()
+    val filter = remember(updatedPost) {
+        Filter.statusKeyToFilter(updatedPost?.status)
+    }
+
+    val time = remember(updatedPost) { updatedPost?.getTimeFromStatus() }
+
+    println("Yoda: Original Post $post")
+    println("Yoda: Updated Post $updatedPost")
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -90,6 +115,47 @@ fun PostDetailScreen(navController: NavController, post: Post) {
                             contentDescription = stringResource(R.string.cd_back)
                         )
                     }
+                },
+                actions = {
+                    if (updatedPost?.status == Filter.Drafts.key) {
+                        OutlinedButton(
+                            onClick = {
+                                scope.launch {
+                                    updatedPost?.let {
+                                        viewModel.changePostStatus(it, Filter.Published)
+                                    }
+                                }
+                            },
+                            modifier = Modifier
+                                .wrapContentWidth()
+                                .height(32.dp),
+                            shape = MaterialTheme.shapes.medium
+                        ) {
+                            Text(
+                                text = stringResource(R.string.publish),
+                                style = MaterialTheme.typography.titleSmall
+                            )
+                        }
+                    } else if (updatedPost?.status == Filter.Published.key) {
+                        OutlinedButton(
+                            onClick = {
+                                scope.launch {
+                                    updatedPost?.let {
+                                        viewModel.changePostStatus(it, Filter.Drafts)
+                                    }
+                                }
+                            },
+                            modifier = Modifier
+                                .wrapContentWidth()
+                                .height(32.dp),
+                            shape = MaterialTheme.shapes.medium
+                        ) {
+                            Text(
+                                text = stringResource(R.string.unpublish),
+                                style = MaterialTheme.typography.titleSmall
+                            )
+                        }
+                    }
                 }
             )
         }
@@ -103,7 +169,7 @@ fun PostDetailScreen(navController: NavController, post: Post) {
                 .padding(bottom = 48.dp)
         ) {
             Text(
-                text = post.title,
+                text = updatedPost?.title ?: "",
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
@@ -111,7 +177,7 @@ fun PostDetailScreen(navController: NavController, post: Post) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 12.dp),
-                tags = post.tags
+                tags = updatedPost?.tags ?: emptyList()
             )
             Row(
                 modifier = Modifier
@@ -119,10 +185,11 @@ fun PostDetailScreen(navController: NavController, post: Post) {
                     .height(24.dp)
                     .padding(end = 2.dp),
             ) {
-                if (post.authors.isEmpty().not()) {
+                if (updatedPost?.authors?.isEmpty()?.not() == true) {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(post.authors[0].avatarUrl)
+                            .data(updatedPost?.featureImage.takeUnless { it.isNullOrEmpty() }
+                                ?: PostsConstants.DEFAULT_PROFILE_IMAGE_URL)
                             .crossfade(true)
                             .build(),
                         modifier = Modifier
@@ -137,14 +204,14 @@ fun PostDetailScreen(navController: NavController, post: Post) {
                             .padding(start = 8.dp)
                             .weight(1f)
                             .align(Alignment.CenterVertically),
-                        text = post.authors[0].name,
+                        text = updatedPost?.authors?.get(0)?.name ?: "",
                         style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight(100)),
                         maxLines = 1
                     )
                 }
                 Text(
                     modifier = Modifier.align(Alignment.CenterVertically),
-                    text = getTimeAgo(post.time),
+                    text = time ?: "",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1
@@ -152,11 +219,11 @@ fun PostDetailScreen(navController: NavController, post: Post) {
             }
             Spacer(modifier = Modifier.height(8.dp))
             HorizontalDivider(thickness = 1.dp)
-            if (post.imageUrl.isNullOrEmpty().not()) {
+            if (updatedPost?.featureImage.isNullOrEmpty().not()) {
                 Spacer(modifier = Modifier.height(16.dp))
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(post.imageUrl)
+                        .data(updatedPost?.featureImage)
                         .crossfade(true)
                         .build(),
                     contentDescription = null,
@@ -169,8 +236,8 @@ fun PostDetailScreen(navController: NavController, post: Post) {
             Spacer(modifier = Modifier.height(20.dp))
 
             val richTextState = rememberRichTextState()
-            LaunchedEffect(Unit) {
-                richTextState.setHtml(post.content)
+            LaunchedEffect(updatedPost) {
+                richTextState.setHtml(updatedPost?.content ?: "")
             }
             RichText(
                 state = richTextState,
@@ -178,6 +245,8 @@ fun PostDetailScreen(navController: NavController, post: Post) {
             )
         }
     }
+    val toastMessage by viewModel.toastMessage.collectAsState()
+    Toast(toastMessage)
 }
 
 @OptIn(ExperimentalLayoutApi::class)

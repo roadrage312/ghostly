@@ -19,9 +19,9 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.ghostly.android.posts.models.Post
 import com.ghostly.android.posts.ui.PostsScreen
 import com.ghostly.android.settings.SettingsScreen
+import com.ghostly.posts.models.Post
 
 @Composable
 fun HomeScreen(

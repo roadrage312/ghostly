@@ -1,15 +1,11 @@
 package com.ghostly.android.posts
 
-import com.ghostly.android.posts.data.GetPostsUseCase
-import com.ghostly.android.posts.data.GetPostsUseCaseImpl
-import com.ghostly.android.posts.data.PostDataSource
-import com.ghostly.android.posts.data.PostRepository
-import com.ghostly.android.posts.data.PostRepositoryImpl
-import com.ghostly.android.posts.data.RemotePostDataSource
+import androidx.paging.ExperimentalPagingApi
+import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 
+@OptIn(ExperimentalPagingApi::class)
 val postsModule = module {
-    single<PostDataSource> { RemotePostDataSource(get()) }
-    single<PostRepository> { PostRepositoryImpl(get(), get()) }
-    single<GetPostsUseCase> { GetPostsUseCaseImpl(get()) }
+    viewModelOf(::PostDetailViewModel)
+    viewModelOf(::PostsViewModel)
 }

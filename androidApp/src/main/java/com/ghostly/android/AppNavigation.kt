@@ -7,11 +7,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.ghostly.android.home.HomeScreen
 import com.ghostly.android.login.ui.LoginScreen
-import com.ghostly.android.login.LoginViewModel
-import com.ghostly.android.posts.models.Post
+import com.ghostly.android.posts.NavigationMaps
 import com.ghostly.android.posts.ui.PostDetailScreen
+import com.ghostly.database.entities.PostWithAuthorsAndTags
+import com.ghostly.posts.models.Post
 import kotlinx.serialization.Serializable
-import org.koin.androidx.compose.koinViewModel
 
 object Destination {
 
@@ -25,13 +25,11 @@ object Destination {
 @Composable
 fun AppNavigation(
     navController: NavHostController,
-    loginViewModel: LoginViewModel = koinViewModel(),
 ) {
     NavHost(navController = navController, startDestination = Destination.Login()) {
         composable<Destination.Login> { backStackEntry ->
             val login = backStackEntry.toRoute<Destination.Login>()
             LoginScreen(
-                loginViewModel = loginViewModel,
                 onLoginSuccess = {
                     navController.navigate(Destination.Home()) {
                         popUpTo(Destination.Login()) {
@@ -39,11 +37,11 @@ fun AppNavigation(
                         }
                     }
                 },
-                login.userLoggedOut
+                didUserLogout = login.userLoggedOut
             )
         }
         composable<Post>(
-            typeMap = Post.typeMap
+            typeMap = NavigationMaps.typeMap
         ) { backStackEntry ->
             val post = backStackEntry.toRoute<Post>()
             PostDetailScreen(

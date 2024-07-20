@@ -35,15 +35,18 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ghostly.android.R
-import com.ghostly.android.posts.models.Filter
-import com.ghostly.android.posts.models.Post
+import com.ghostly.android.posts.PostsConstants
+import com.ghostly.android.posts.getTimeFromStatus
 import com.ghostly.android.theme.accentRed
 import com.ghostly.android.ui.components.verticalGradient
-import com.ghostly.android.utils.getTimeAgo
+import com.ghostly.posts.models.Filter
+import com.ghostly.posts.models.Post
 
 @Composable
 fun PostItem(post: Post, showStatus: Boolean, onPostClick: (Post) -> Unit) {
+
     val filter = remember(post.status) { Filter.statusKeyToFilter(post.status) }
+    val time = remember(post) { post.getTimeFromStatus() }
 
     Column(
         modifier = Modifier
@@ -66,7 +69,8 @@ fun PostItem(post: Post, showStatus: Boolean, onPostClick: (Post) -> Unit) {
             ) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(post.imageUrl)
+                        .data(post.featureImage.takeUnless { it.isNullOrEmpty() }
+                            ?: PostsConstants.DEFAULT_IMAGE_URL)
                         .crossfade(true)
                         .build(),
                     contentDescription = null,
@@ -132,7 +136,10 @@ fun PostItem(post: Post, showStatus: Boolean, onPostClick: (Post) -> Unit) {
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(post.authors[0].avatarUrl)
+                    .data(
+                        post.authors.get(0)?.profileImage
+                            ?: PostsConstants.DEFAULT_PROFILE_IMAGE_URL
+                    )
                     .crossfade(true)
                     .build(),
                 modifier = Modifier
@@ -152,7 +159,7 @@ fun PostItem(post: Post, showStatus: Boolean, onPostClick: (Post) -> Unit) {
             )
             Text(
                 modifier = Modifier.align(Alignment.CenterVertically),
-                text = getTimeAgo(post.time),
+                text = time,
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1

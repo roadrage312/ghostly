@@ -2,13 +2,16 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.kotlinCocoapods)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.room)
+    id("com.google.devtools.ksp")
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
     androidTarget {
         compilations.all {
             kotlinOptions {
-                jvmTarget = "1.8"
+                jvmTarget = "11"
             }
         }
     }
@@ -27,10 +30,28 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
         commonMain.dependencies {
-            //put your multiplatform dependencies here
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.sqlite.bundled)
+            implementation(libs.sqlite)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.koin.core)
+            implementation(libs.cash.paging)
+            implementation(libs.androidx.room.paging)
+        }
+        androidMain.dependencies {
+            implementation(libs.androidx.datastore.preferences)
+            implementation(libs.jjwt.api)
+            runtimeOnly(libs.jjwt.impl)
+            runtimeOnly(libs.jjwt.orgjson)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -45,7 +66,21 @@ android {
         minSdk = 29
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 }
+
+dependencies {
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    add("kspIosX64", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
+    debugImplementation(libs.compose.ui.tooling)
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
+task("testClasses")
