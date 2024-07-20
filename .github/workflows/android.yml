@@ -24,11 +24,14 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew clean build
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: apks
+        path: androidApp/build/outputs/apk/release/*.apk
     - name: Download a Build Artifact
       uses: actions/download-artifact@v4.1.8
       with:
-        # Name of the artifact to download. If unspecified, all artifacts for the run are downloaded.
-        name: androidApp-release-unsigned.apk
-        # Destination path. Supports basic tilde expansion. Defaults to $GITHUB_WORKSPACE
-        path: $GITHUB_WORKSPACE/androidApp/build/outputs/apk/release
+        name: apks
+        path: ${{ github.workspace }}/androidApp/build/outputs/apk/release
           
