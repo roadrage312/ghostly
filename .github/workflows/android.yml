@@ -33,5 +33,5 @@ jobs:
       uses: actions/download-artifact@v4.1.8
       with:
         name: apks
-        path: ${{ github.workspace }}/androidApp/build/outputs/apk/release
+        path: androidApp/build/outputs/apk/release/*.apk
           
