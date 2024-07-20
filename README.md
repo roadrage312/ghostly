@@ -2,13 +2,13 @@
 
 ![Ghostly Logo](https://raw.githubusercontent.com/roadrage312/ghostly/develop/androidApp/src/main/res/mipmap-xxxhdpi/ic_launcher.webp)
 
-Ghostly is an open-source, modern client application for the [Ghost](https://ghost.org/) content management system. Our goal is to provide a seamless, user-friendly experience for Ghost blog creators on mobile platforms.
+Ghostly is an open-source, modern client application for the [Ghost](https://ghost.org/) content management system. My goal is to provide a seamless, user-friendly experience for Ghost blog creators on mobile platforms.
 
 ## 🚀 Current Status
 
 - ✅ A simple, read-only application is now available for Android!
 - ✅ Ready to Use: Simply configure your Ghost CMS settings, and you're good to go!
-- 🔄 We're actively developing and seeking contributions.
+- 🔄 I am actively developing and seeking contributions.
 - 🌟 Feature requests and feedback are welcome via GitHub issues.
 
 ## 🎯 Project Vision
@@ -39,7 +39,7 @@ I am building Ghostly as a Kotlin Multiplatform project, aiming to:
 
 I am actively seeking contributors! Here's how you can help:
 
-1. Check out the [project plan](https://github.com/roadrage312/ghostly/projects/1) to see what's in the pipeline.
+1. Check out the [project plan](https://github.com/users/roadrage312/projects/1) to see what's in the pipeline.
 2. Pick an issue or feature you'd like to work on.
 3. Fork the repository and create your branch from `develop`.
 4. Code your feature or fix.
